@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 /* You can write your css here */
+@layer utilities {
+  .shadow-perrona {
+    box-shadow: 0 0 0px 8px rgba(124, 58, 237, 0.4);
+  }
+}
