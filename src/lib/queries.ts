@@ -7,3 +7,23 @@ export const pool = gql`
     }
   }
 `;
+
+export const pools = (slug: string) => gql`
+query {
+  pool(id: "${slug}") {
+    _id
+    name
+    description
+    location
+    specs{
+      width
+      length
+      depth
+      capacity
+    }
+    sensorDataHistory {
+      date
+      ph
+    }
+  }
+}`;
