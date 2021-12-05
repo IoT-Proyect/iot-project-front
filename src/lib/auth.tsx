@@ -1,11 +1,8 @@
 import { useState, useContext, createContext } from 'react';
-import {
-  ApolloProvider,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  gql,
-} from '@apollo/client';
+import { ApolloProvider, gql } from '@apollo/client';
+import { apolloClient } from 'apolloClient';
+import jwtDecode from 'jwt-decode';
+import { useRouter } from 'next/router';
 
 const AuthContext = createContext({});
 
@@ -14,9 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={auth}>
-      <ApolloProvider client={auth.createApolloClient()}>
-        {children}
-      </ApolloProvider>
+      <ApolloProvider client={auth.client}>{children}</ApolloProvider>
     </AuthContext.Provider>
   );
 };
@@ -24,47 +19,31 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   return useContext(AuthContext);
 };
+const lsAuthToken =
+  typeof window !== 'undefined' && localStorage.getItem('authToken');
 
+interface DecodedToken {
+  id: String;
+  firstName: String;
+  lastName: String;
+  email: String;
+}
 function useProvideAuth() {
-  const [authToken, setAuthToken] = useState(
-    typeof window !== 'undefined' ? localStorage.getItem('authToken') : null
-  );
-  console.log('useProvideAuth', authToken);
+  const [user, setUser] = useState<DecodedToken | null>(null);
+  const [authToken, setAuthToken] = useState(lsAuthToken || null);
+  const router = useRouter();
+  if (typeof window !== 'undefined' && user === null && authToken) {
+    const { id, firstName, lastName, email }: DecodedToken =
+      jwtDecode(authToken);
+    setUser({ id, firstName, lastName, email });
+  }
 
-  const isSignedIn = () => {
-    if (authToken) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const getAuthHeaders = () => {
-    if (!authToken) return null;
-
-    return {
-      authorization: `Bearer ${authToken}`,
-    };
-  };
-
-  const createApolloClient = () => {
-    const link = new HttpLink({
-      uri: 'http://localhost:8080/graphql',
-      headers: getAuthHeaders(),
-    });
-
-    return new ApolloClient({
-      link,
-      cache: new InMemoryCache(),
-    });
-  };
+  const client = apolloClient;
 
   const signIn = async ({ email, password }) => {
-    const client = createApolloClient();
     const LoginMutation = gql`
       mutation{
           LoginUser(email: "${email}", password: "${password}") {
-            email
             token
         }
       }
@@ -74,25 +53,31 @@ function useProvideAuth() {
       mutation: LoginMutation,
     });
 
-    console.log(result);
-
     if (result?.data?.LoginUser?.token) {
       setAuthToken(result.data.LoginUser.token);
+      console.log('result', result);
       localStorage.setItem('authToken', result.data.LoginUser.token);
+      console.log('auth tokeeeene', authToken);
+      const { id, firstName, lastName, email }: DecodedToken = jwtDecode(
+        result.data.LoginUser.token
+      );
+      setUser({ id, firstName, lastName, email });
+      router.push('/');
     }
   };
 
   const signOut = () => {
     setAuthToken(null);
+    setUser(null);
     localStorage.removeItem('authToken');
   };
 
   return {
+    user,
     authToken,
+    client,
     setAuthToken,
-    isSignedIn,
     signIn,
     signOut,
-    createApolloClient,
   };
 }
