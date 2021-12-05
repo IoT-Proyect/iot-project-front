@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
-interface PoolProps {
+interface PoolProps {}
+interface Pool {
   id?: string;
   name: string;
 }
-export const Pool = ({ id, name }: PoolProps) => {
+export const Pool = ({ pool }) => {
+  const { _id, name } = pool;
+  console.log(pool);
   return (
-    <Link href={`pool/${id}`}>
+    <Link href={`pool/${_id}`}>
       <article
         className="bg-white rounded-2xl flex items-center p-3 justify-center aspect-w-16 aspect-h-9
     shadow-lg max-w-sm relative transition-all transform hover:scale-105 cursor-pointer group">
