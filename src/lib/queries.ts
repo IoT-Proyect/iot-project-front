@@ -1,16 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const pool = gql`
-  query MyQuery($id: ID!) {
-    pool(id: $id) {
-      name
-    }
-  }
-`;
-
-export const pools = (slug: string) => gql`
+export const GET_POOL = (id: string) => gql`
 query {
-  pool(id: "${slug}") {
+  pool(id: "${id}") {
     _id
     name
     description
@@ -24,6 +16,19 @@ query {
     sensorDataHistory {
       date
       ph
+    }
+  }
+}`;
+
+export const GET_USER_POOLS = (id: string) => gql`
+query {
+  user(id: "${id}") {
+    pools {
+      _id
+      name
+      description
+      location
+      image
     }
   }
 }`;

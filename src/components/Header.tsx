@@ -1,7 +1,11 @@
+import { useAuth } from '@/lib/auth';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 // JOTOS - JAVASCRIPT OBJECT ORIENTED TEMPLATE STRING
 export const Header = () => {
+  const { user } = useAuth();
+
   const date = new Date().toLocaleDateString();
 
   return (
@@ -15,7 +19,7 @@ export const Header = () => {
         <div className="relative rounded-full overflow-hidden w-10 h-10">
           <Image src="/adaldev.png" layout="fill" objectFit="cover" />
         </div>
-        <p className="ml-4 mr-2 font-bold">Adalberto</p>
+        <p className="ml-4 mr-2 font-bold">{user && `${user.firstName}`}</p>
       </div>
     </header>
   );

@@ -1,9 +1,14 @@
 import { useAuth } from '@/lib/auth';
 import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function LoginPage() {
-  const { authToken } = useAuth();
-  console.log(authToken);
+  const { user } = useAuth();
+  const router = useRouter();
+  if (user) {
+    router.push('/');
+  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,6 +20,9 @@ export default function LoginPage() {
   }
   return (
     <div>
+      <Link href="/">
+        <a>Home</a>
+      </Link>
       <h1>Login</h1>
       <form onSubmit={onSubmit}>
         <input
