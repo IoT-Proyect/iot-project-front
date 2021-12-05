@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from 'react';
+import { useState, useContext, createContext, useEffect } from 'react';
 import { ApolloProvider, gql } from '@apollo/client';
 import { apolloClient } from 'apolloClient';
 import jwtDecode from 'jwt-decode';
@@ -32,11 +32,14 @@ function useProvideAuth() {
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [authToken, setAuthToken] = useState(lsAuthToken || null);
   const router = useRouter();
-  if (typeof window !== 'undefined' && user === null && authToken) {
-    const { id, firstName, lastName, email }: DecodedToken =
-      jwtDecode(authToken);
-    setUser({ id, firstName, lastName, email });
-  }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && user === null && authToken) {
+      const { id, firstName, lastName, email }: DecodedToken =
+        jwtDecode(authToken);
+      setUser({ id, firstName, lastName, email });
+    }
+  }, [authToken]);
 
   const client = apolloClient;
 
