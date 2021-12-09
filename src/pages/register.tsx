@@ -2,9 +2,9 @@ import { useAuth } from '@/lib/auth';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { AtSymbolIcon, UserCircleIcon } from '@heroicons/react/solid';
+import { AtSymbolIcon, UserCircleIcon, UserIcon } from '@heroicons/react/solid';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { user } = useAuth();
   const router = useRouter();
   if (user) {
@@ -27,36 +27,59 @@ export default function LoginPage() {
             <h1 className="mb-5 text-2xl font-bold text-center text-purple-600">
               Plomo Reportes
             </h1>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex mb-3">
+                <input
+                  className="h-12 block rounded-3xl text-left p-1 pl-4 focus:outline-none"
+                  type="text"
+                  placeholder="Nombre"
+                  name="nombre"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="flex mb-3">
+                <input
+                  className="h-12 block rounded-3xl text-left pl-4 pb-1 focus:outline-none"
+                  type="text"
+                  placeholder="Apellido"
+                  name="apellido"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div className="flex mb-3">
-              <AtSymbolIcon className="w-10 h-10 transition-transform hover:scale-125 text-purple-600 mt-2" />
               <input
-                className=" w-80 h-14 block rounded-3xl text-left pl-4 pb-1 focus:outline-none"
+                className="w-full h-12 block rounded-3xl text-left pl-4 pb-1 focus:outline-none"
                 type="text"
-                placeholder="email"
+                placeholder="Correo"
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div className="flex mb-3">
-              <UserCircleIcon className="w-10 h-10 transition-transform hover:scale-125 text-purple-600 mt-2" />
               <input
-                className=" w-80 h-14 block rounded-3xl text-left pl-4 pb-1 focus:outline-none"
+                className="w-full h-12 block rounded-3xl text-left pl-4 pb-1 focus:outline-none"
                 type="password"
-                placeholder="password"
+                placeholder="Contraseña"
                 name="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button
-              type="submit"
-              className="w-full h-14 transition-all bg-purple-700 hover:bg-purple-600 hover:scale-105 block rounded-3xl text-white md:w-80 md:ml-10">
-              <p className="font-bold tracking-widest">Login</p>
-            </button>
+            <div className="flex mb-3">
+              <button
+                type="submit"
+                className="w-full h-12 transition-all bg-purple-700 hover:bg-purple-600 hover:scale-105 block rounded-3xl text-white md:w-80 mx-auto">
+                <p className="font-bold tracking-widest">Register</p>
+              </button>
+            </div>
+
             <div className="flex justify-center mt-5">
-              <Link href="/register">
+              <Link href="/login">
                 <a className="text-purple-600 hover:text-purple-500">
-                  <p className="font-bold tracking-widest">No tengo cuenta</p>
+                  <p className="font-bold tracking-widest">Ya tengo cuenta</p>
                 </a>
               </Link>
             </div>

@@ -1,15 +1,23 @@
 import Link from 'next/link';
-import { HomeIcon, ChartBarIcon, CogIcon } from '@heroicons/react/solid';
+import {
+  HomeIcon,
+  ChartBarIcon,
+  CogIcon,
+  LoginIcon,
+} from '@heroicons/react/solid';
+import { useAuth } from '@/lib/auth';
 
 interface NavigationProps {
   className?: string;
 }
 
 export const Navigation = ({ className }: NavigationProps) => {
+  const { signOut } = useAuth();
+
   return (
     <nav
-      className={`bg-white w-36 h-screen border-r-2 flex flex-col ${className}`}>
-      <div className="mt-16 mb-28">
+      className={`bg-white w-36 h-screen border-r-2 flex flex-col justify-around ${className} sticky top-0`}>
+      <div className="">
         <div className="w-8 h-8 bg-purple-600 shadow-perrona mx-auto rounded-full"></div>
         <h2 className="text-center font-bold pt-5 text-sm">Plomo Reportes</h2>
       </div>
@@ -37,6 +45,11 @@ export const Navigation = ({ className }: NavigationProps) => {
           </Link>
         </li>
       </ul>
+      <div className="grid place-items-center">
+        <button onClick={signOut}>
+          <LoginIcon className="w-10 h-10 transition-transform hover:scale-125 text-purple-600 mx-auto " />
+        </button>
+      </div>
     </nav>
   );
 };

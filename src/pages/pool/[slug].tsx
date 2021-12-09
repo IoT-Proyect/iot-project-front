@@ -7,11 +7,14 @@ import { Card } from '../../components/Card';
 import { GET_POOL } from '@/lib/queries';
 import { useRouter } from 'next/dist/client/router';
 
-export default function Pool() {
+export default function Pool({ slug }) {
   const router = useRouter();
-  const { loading, data } = useQuery(GET_POOL(router.query.slug), {
+  const { loading, data } = useQuery(GET_POOL, {
     fetchPolicy: 'network-only',
+    variables: { id: slug },
   });
+  console.log('slug', router.query.slug);
+  console.log(data);
 
   if (loading)
     return (
@@ -34,4 +37,12 @@ export default function Pool() {
       </Layout>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      slug: context.params.slug,
+    }, // will be passed to the page component as props
+  };
 }

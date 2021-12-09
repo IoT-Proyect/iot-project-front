@@ -58,12 +58,11 @@ function useProvideAuth() {
 
     if (result?.data?.LoginUser?.token) {
       setAuthToken(result.data.LoginUser.token);
-      console.log('result', result);
       localStorage.setItem('authToken', result.data.LoginUser.token);
-      console.log('auth tokeeeene', authToken);
       const { id, firstName, lastName, email }: DecodedToken = jwtDecode(
         result.data.LoginUser.token
       );
+
       setUser({ id, firstName, lastName, email });
       router.push('/');
     }
@@ -72,6 +71,7 @@ function useProvideAuth() {
   const signOut = () => {
     setAuthToken(null);
     setUser(null);
+    router.push('/login');
     localStorage.removeItem('authToken');
   };
 
